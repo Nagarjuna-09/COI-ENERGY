@@ -56,11 +56,12 @@ app.get('/jobs/unpaid', getProfile, async (req, res) => {
                     { ClientId: req.profile.id },
                     { ContractorId: req.profile.id },
                 ],
-                status: 'in_progress', //-- i dont think we need this line as we need terminated contracts also
+                //status: 'in_progress',
             },
         }],
     });
-    
+    const filteredJobs = jobs.filter(job => job.paid === null);
+    res.json(filteredJobs);
 });
 
 module.exports = app;
