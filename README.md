@@ -67,7 +67,7 @@ The exercise requires [Node.js](https://nodejs.org/en/) to be installed. We reco
 
 ## APIs To Implement 
 
-  
+NOTE: Node is already installed on my pc, so i haven't cloned it as mentioned in the readMe file to save some time.
 
 Below is a list of the required API's for the application.
 
