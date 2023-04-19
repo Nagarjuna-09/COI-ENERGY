@@ -94,6 +94,10 @@ Solution:
 
 1. ***GET*** `/jobs/unpaid` -  Get all unpaid jobs for a user (***either*** a client or contractor), for ***active contracts only***.
 
+-built api such that the loggedin user can check his unpaid jobs
+- returns only the list of jobs that have active contracts (excludes contracts that terminated or new, even though they have dues.)
+- Tested using Postman similarly to the testing of /contracts api as discussed above.
+
 1. ***POST*** `/jobs/:job_id/pay` - Pay for a job, a client can only pay if his balance >= the amount to pay. The amount should be moved from the client's balance to the contractor balance.
 
 1. ***POST*** `/balances/deposit/:userId` - Deposits money into the the the balance of a client, a client can't deposit more than 25% his total of jobs to pay. (at the deposit moment)

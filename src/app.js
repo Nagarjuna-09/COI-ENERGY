@@ -45,7 +45,7 @@ app.get('/contracts', getProfile, async (req, res) => {
     res.json(contracts)
 })
 
-//returns the unpaid jobs of loggedin users (returns the list even if contract is terminated and unpaid)
+//returns the unpaid jobs of loggedin users (returns for only active contracts, excludes terminated and new even if they have dues)
 app.get('/jobs/unpaid', getProfile, async (req, res) => {
     const { Contract, Job } = req.app.get('models');
     const jobs = await Job.findAll({
@@ -56,7 +56,7 @@ app.get('/jobs/unpaid', getProfile, async (req, res) => {
                     { ClientId: req.profile.id },
                     { ContractorId: req.profile.id },
                 ],
-                //status: 'in_progress',
+                status: 'in_progress',
             },
         }],
     });
@@ -65,3 +65,4 @@ app.get('/jobs/unpaid', getProfile, async (req, res) => {
 });
 
 module.exports = app;
+
