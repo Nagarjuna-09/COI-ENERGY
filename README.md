@@ -85,6 +85,13 @@ Solution:
 
 1. ***GET*** `/contracts` - Returns a list of contracts belonging to a user (client or contractor), the list should only contain non terminated contracts.
 
+Solution:
+
+- built API such that the loggedin user can access all his non-terminated contracts (in-process and new contracts are displayed)
+- No contract id is provided in the url as parameter or in the end point
+- Can directly access the contracts after logging in.
+- Test is performed via Postman where loggedin user is changed by altering the profile_id field in header.
+
 1. ***GET*** `/jobs/unpaid` -  Get all unpaid jobs for a user (***either*** a client or contractor), for ***active contracts only***.
 
 1. ***POST*** `/jobs/:job_id/pay` - Pay for a job, a client can only pay if his balance >= the amount to pay. The amount should be moved from the client's balance to the contractor balance.

@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.set('sequelize', sequelize)
 app.set('models', sequelize.models)
 
-
+//returns the list of contracts that the logged in user is engaged in
 app.get('/contracts/:id', getProfile, async (req, res) => {
     const { Contract } = req.app.get('models');
     const { id } = req.params;
@@ -30,7 +30,20 @@ app.get('/contracts/:id', getProfile, async (req, res) => {
     res.json(contract);
 });
 
-
+//returns the list of non-terminated contracts for the loggedin user
+app.get('/contracts', getProfile, async (req, res) => {
+    const { Contract } = req.app.get('models')
+    const contracts = await Contract.findAll({
+        where: {
+            [Op.or]: [
+                { ClientId: req.profile.id },
+                { ContractorId: req.profile.id },
+            ],
+            status: { [Op.ne]: 'terminated' }, //excluding terminated contracts
+        },
+    })
+    res.json(contracts)
+})
 
 
 
