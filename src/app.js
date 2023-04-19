@@ -223,5 +223,41 @@ function isValidDate(dateString) {
     return !isNaN(date.getTime());
 }
 
-module.exports = app;
+//returns the top 2 clients who paid the highest during the start and end dates
+app.get('/admin/best-clients', async (req, res) => {
+    const { start = '1970-01-01', end = new Date().toISOString(), limit = 2 } = req.query;
+    const { Job, Contract, Profile } = req.app.get('models');
 
+    const results = await Job.findAll({
+        where: {
+            paid: true,
+            paymentDate: {
+                [Op.between]: [start, end],
+            },
+        },
+        include: [{
+            model: Contract,
+            include: [{
+                model: Profile,
+                as: 'Client',
+                attributes: ['firstName', 'lastName'],
+            }],
+        }],
+        group: ['Contract.ClientId'],
+        attributes: [
+            [sequelize.fn('SUM', sequelize.col('price')), 'totalPaid'],
+            [sequelize.literal('Contract.ClientId'), 'clientId'],
+        ],
+        order: [[sequelize.literal('totalPaid'), 'DESC']],
+        limit: parseInt(limit, 10),
+    });
+    const filteredResults = results.map(result => ({
+        clientId: result.Contract.ClientId,
+        fullName: `${result.Contract.Client.firstName} ${result.Contract.Client.lastName}`,
+        totalPaid: result.dataValues.totalPaid
+    }));
+
+    res.json(filteredResults);
+});
+
+module.exports = app;

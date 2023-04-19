@@ -133,6 +133,7 @@ Solution:
 
 - No login authentication needed.
 - returns the highest earning profession between the given dates.
+- sample request: http://localhost:3001/admin/best-profession?start=2020-01-01&end=2023-04-19
 
 1. ***GET*** `/admin/best-clients?start=<date>&end=<date>&limit=<integer>` - returns the clients the paid the most for jobs in the query time period. limit query parameter should be applied, default limit is 2.
 ```
@@ -154,7 +155,10 @@ Solution:
     }
 ]
 ```
+Solution: 
 
+- returns the top 2 clients who has paid highest between the start and end dates.
+- sample request: http://localhost:3001/admin/best-clients?start=2020-01-01&end=2023-04-19
   
 
 ## Going Above and Beyond the Requirements
@@ -163,12 +167,8 @@ Given the time expectations of this exercise, we don't expect anyone to submit a
 
 It would be great for example if you'd write some unit test / simple frontend demostrating calls to your fresh APIs.
 
-  
-
 ## Submitting the Assignment
 
 When you have finished the assignment, create a github repository and send us the link. ytzvan.mastino@coienergy.com
-
-  
 
 Thank you and good luck! 🙏
