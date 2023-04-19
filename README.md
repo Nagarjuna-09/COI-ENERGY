@@ -76,6 +76,13 @@ Below is a list of the required API's for the application.
 
 1. ***GET*** `/contracts/:id` - This API is broken 😵! it should return the contract only if it belongs to the profile calling. better fix that!
 
+Solution: 
+
+- built the API such that the logged in user can access only his own contracts. 
+- Used Postman application to test the working condition
+- Set the profile_id in the header section to the id of the loggedin user to test the API using Postman
+- When the user inputs the contract id that is not his, nothing is returned.
+
 1. ***GET*** `/contracts` - Returns a list of contracts belonging to a user (client or contractor), the list should only contain non terminated contracts.
 
 1. ***GET*** `/jobs/unpaid` -  Get all unpaid jobs for a user (***either*** a client or contractor), for ***active contracts only***.

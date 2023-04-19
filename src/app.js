@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {sequelize} = require('./model')
+const { Op } = require('sequelize');
 const {getProfile} = require('./middleware/getProfile')
 const app = express();
 app.use(bodyParser.json());
@@ -28,6 +29,9 @@ app.get('/contracts/:id', getProfile, async (req, res) => {
     }
     res.json(contract);
 });
+
+
+
 
 
 module.exports = app;
