@@ -141,7 +141,7 @@ app.post('/balances/deposit/:userId', getProfile, async (req, res) => {
                     { ClientId: req.profile.id },
                     { ContractorId: req.profile.id },
                 ],
-                //status: 'in_progress',
+                //status: 'in_progress', //-- i dont think we need this line as we need terminated contracts also
             },
         }],
     });
@@ -162,7 +162,66 @@ app.post('/balances/deposit/:userId', getProfile, async (req, res) => {
     res.send('Deposit successful');
 });
 
+//highest earning profession
+app.get('/admin/best-profession', async (req, res) => {
+    const { start, end } = req.query;
 
+    // Validate date parameters
+    if (!start || !end || !isValidDate(start) || !isValidDate(end)) {
+        return res.status(400).json({ message: 'Invalid date parameters' });
+    }
+
+    const { Profile, Contract, Job } = req.app.get('models');
+
+    // Find all jobs paid within the time range
+    const jobs = await Job.findAll({
+        where: {
+            paid: true,
+            paymentDate: {
+                [Op.between]: [start, end],
+            },
+        },
+        include: {
+            model: Contract,
+            include: {
+                model: Profile,
+                as: 'Contractor',
+                attributes: ['profession'],
+            },
+        },
+    });
+
+    // Sum the total earnings for each profession
+    const earningsByProfession = {};
+    jobs.forEach(job => {
+        const profession = job.Contract.Contractor.profession;
+        const earnings = job.price;
+        if (!earningsByProfession[profession]) {
+            earningsByProfession[profession] = 0;
+        }
+        earningsByProfession[profession] += earnings;
+    });
+
+    console.log(earningsByProfession);
+
+    // Find the profession with the highest earnings
+    let bestProfession = null;
+    let highestEarnings = 0;
+    Object.entries(earningsByProfession).forEach(([profession, earnings]) => {
+        if (earnings > highestEarnings) {
+            bestProfession = profession;
+            highestEarnings = earnings;
+        }
+    });
+
+    res.json({ profession: bestProfession, earnings: highestEarnings });
+});
+
+// Helper function to validate date strings
+function isValidDate(dateString) {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+}
 
 module.exports = app;
 
