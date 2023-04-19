@@ -45,6 +45,22 @@ app.get('/contracts', getProfile, async (req, res) => {
     res.json(contracts)
 })
 
-
+//returns the unpaid jobs of loggedin users (returns the list even if contract is terminated and unpaid)
+app.get('/jobs/unpaid', getProfile, async (req, res) => {
+    const { Contract, Job } = req.app.get('models');
+    const jobs = await Job.findAll({
+        include: [{
+            model: Contract,
+            where: {
+                [Op.or]: [
+                    { ClientId: req.profile.id },
+                    { ContractorId: req.profile.id },
+                ],
+                status: 'in_progress', //-- i dont think we need this line as we need terminated contracts also
+            },
+        }],
+    });
+    
+});
 
 module.exports = app;
