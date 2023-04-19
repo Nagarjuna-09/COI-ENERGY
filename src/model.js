@@ -79,8 +79,16 @@ Profile.hasMany(Contract, {as :'Contractor',foreignKey:'ContractorId'})
 Contract.belongsTo(Profile, {as: 'Contractor'})
 Profile.hasMany(Contract, {as : 'Client', foreignKey:'ClientId'})
 Contract.belongsTo(Profile, {as: 'Client'})
-Contract.hasMany(Job)
+// Contract.hasMany(Job)
+// Job.belongsTo(Contract)
+
+//newly added to build relationship 
+Contract.hasMany(Job, { foreignKey: 'ContractId' })
 Job.belongsTo(Contract)
+
+// Defining the association between Profile and Job
+// Profile.hasMany(Job);
+// Job.belongsTo(Profile);
 
 module.exports = {
   sequelize,

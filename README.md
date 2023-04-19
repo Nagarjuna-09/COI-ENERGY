@@ -94,13 +94,39 @@ Solution:
 
 1. ***GET*** `/jobs/unpaid` -  Get all unpaid jobs for a user (***either*** a client or contractor), for ***active contracts only***.
 
+Solution: 
+
 -built api such that the loggedin user can check his unpaid jobs
 - returns only the list of jobs that have active contracts (excludes contracts that terminated or new, even though they have dues.)
 - Tested using Postman similarly to the testing of /contracts api as discussed above.
 
 1. ***POST*** `/jobs/:job_id/pay` - Pay for a job, a client can only pay if his balance >= the amount to pay. The amount should be moved from the client's balance to the contractor balance.
 
+Solution:
+- only clients can pay
+- When the loggedin user tries to pay for the job that is already paid for, "the job is already paid" message is returned
+- When the loggedin user tries to pay for the job that is is not engaged in, there will be no output displayed and no transaction happens.
+- when contractor tries to pay for his own service, you get "unauthorized message"
+- when client tries to pay for the service, by choosing a specific job id,he can successfully pay if the amount in his account is greater than due amount. else "insufficient price" message is displayed.
+
+
 1. ***POST*** `/balances/deposit/:userId` - Deposits money into the the the balance of a client, a client can't deposit more than 25% his total of jobs to pay. (at the deposit moment)
+
+Solution
+- should be a loggedin user to deposit money
+- only clients can deposit money
+- can only deposit 25% of total jobs to pay
+- when there are no jobs to pay, the max deposit amount that can be deposited is set  to zero, thereby disabling the client to deposit any money.
+- max amount that can be deposited by user is printed to console just for reference
+- terminated contracts dues are also considered for deciding the max amount that can be deposited and paid by the client if they are unpaid.
+- while sending requests in Postman, the user:Id in the url should match with the logged in user.
+- Testing was done by sending the amount in the body by setting header: content-type: application/json and sending the body raw values as:
+
+{
+    "amount": 100
+}
+- Deposit is successful when max amount is greater than the amount provided in the above amount key value section.
+
 
 1. ***GET*** `/admin/best-profession?start=<date>&end=<date>` - Returns the profession that earned the most money (sum of jobs paid) for any contactor that worked in the query time range.
 
